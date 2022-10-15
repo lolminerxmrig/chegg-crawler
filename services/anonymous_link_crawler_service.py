@@ -11,18 +11,17 @@ from repository.question_repository import QuestionRepository
 import pyautogui
 import webbrowser
 import subprocess
-
 from services import image_service
 from util.mysql_db_manager import MySqlDBManager
-#make some change here
+from services.constants import chrome_path
+from services.constants import firefox_path
+from services.constants import search_url
+from services.constants import main_url
+from services.constants import storagePath
+from services.constants import cookiePath
+from services.constants import sessionPath
+
 question_repository = QuestionRepository()
-chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s '
-firefox_path = 'C:/Program Files/Mozilla Firefox/firefox.exe %s  '
-search_url = "https://www.google.com/search?q=search&client=firefox-b-d&sxsrf=AOaemvJMXW5hlRoO20cjqYKhqMKLu-nkqw%3A1642458377329&ei=Ce3lYdTVE_3KytMP0NCMiAQ&ved=0ahUKEwiU_o2h6rn1AhV9pXIEHVAoA0EQ4dUDCA4&uact=5&oq=search&gs_lcp=Cgdnd3Mtd2l6EAMyBQgAEJECMgQIABBDMgsILhCABBCxAxCDATIFCAAQkQIyBwgAELEDEEMyBAgAEEMyCAgAEIAEELEDMggIABCABBCxAzIECAAQQzILCAAQgAQQsQMQgwE6BwgjELADECc6BAgjECc6CAgAELEDEIMBOgUIABCABDoICC4QsQMQgwE6DgguEIAEELEDEMcBEKMCOggILhCABBCxAzoECC4QQzoLCAAQgAQQsQMQyQNKBAhBGAFKBAhGGABQtw9Y3Rtg-iNoAXAAeACAAVSIAYgDkgEBNpgBAKABAcgBAcABAQ&sclient=gws-wiz"
-main_url = "google.com"
-storagPath = r'C:\Users\Administrator\AppData\Roaming\Mozilla\Firefox\Profiles\4nvq1yjz.default-release\storage.sqlite'
-cookiePath = r'C:\Users\Administrator\AppData\Roaming\Mozilla\Firefox\Profiles\4nvq1yjz.default-release\cookies.sqlite'
-sessionPath = r'C:\Users\Administrator\AppData\Roaming\Mozilla\Firefox\Profiles\4nvq1yjz.default-release\sessionstore.jsonlz4'
 mysql_db_manager = MySqlDBManager('admin',
                                   'QuizPlus123',
                                   'quizplusdevtestdb.c4m3phz25ns8.us-east-1.rds.amazonaws.com',
@@ -39,8 +38,8 @@ class LinkCrawler:
         dx, dy = self.set_resoution()
         os.system("taskkill /im firefox.exe /f")
         time.sleep(2)
-        if os.path.exists(storagPath):
-            os.unlink(storagPath)
+        if os.path.exists(storagePath):
+            os.unlink(storagePath)
 
         if os.path.exists(sessionPath):
             os.unlink(sessionPath)
@@ -64,8 +63,8 @@ class LinkCrawler:
                     while self._is_captcha(html, dx, dy):
 
                         os.system("taskkill /im firefox.exe /f")
-                        if os.path.exists(storagPath):
-                            os.unlink(storagPath)
+                        if os.path.exists(storagePath):
+                            os.unlink(storagePath)
 
                         if os.path.exists(sessionPath):
                             os.unlink(sessionPath)
