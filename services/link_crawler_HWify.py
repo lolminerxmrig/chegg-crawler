@@ -46,9 +46,6 @@ class HWifyCrawler:
                     # self.selenium_search(question)
 
 
-
-
-
             except Exception as e:
                 print(str(e))
                 # Slack().send_message_to_slack(GENERAL_ERROR, str(e))
@@ -63,23 +60,28 @@ class HWifyCrawler:
 
     def pyautogui_search(self, dx, dy, question):
         # get url from Database and copy it
-        webbrowser.get(chrome_path).open("https://homeworkify.net/")
-        pyautogui.moveTo(dx * 700, dy * 850, 1)
+        webbrowser.open_new("https://homeworkify.net/")
+        time.sleep(5)
+        pyautogui.scroll(-600)
+        time.sleep(5)
+        pyautogui.moveTo(dx * 590, dy * 190, 1)
         time.sleep(1)
         pyautogui.click(button='left')
         time.sleep(.3)
         pyautogui.typewrite(question.url)
-        time.sleep(1)
-        pyautogui.moveTo(dx * 1250, dy * 850, 1)
+        pyautogui.moveTo(dx * 1300, dy * 190, 1)
         time.sleep(1)
         pyautogui.click(button='left')
         time.sleep(1)
-        html = self._save_web_page(dx, dy)
-        if html.find("We have solution for your question!") == -1:
+        status = self._save_web_page(dx, dy)
+        if status.find("No solution found!") != -1:
             #no answer
             print("no answer")
+        elif status.find("We have solution for your question!") != -1:
+            print("answer found")
+            time.sleep(30)
         else:
-            pyautogui.scroll(10)
+            print("unknown")
             time.sleep(30)
 
 
@@ -113,8 +115,8 @@ class HWifyCrawler:
             print("there is an Error")
 
     def _save_web_page(self, dx, dy):
-        pyperclip.copy("")
-        while True:
+            pyperclip.copy("")
+
             # print("clicking to get soruce html")
             # time.sleep(1)
             # pyautogui.hotkey('ctrl', 'u')
@@ -128,8 +130,9 @@ class HWifyCrawler:
             pyautogui.hotkey('ctrl', 'c')
             time.sleep(1)
             html = pyperclip.paste()
-            if html.find("<html") != -1:
-                break
-        time.sleep(1)
-        pyautogui.hotkey('ctrl', 'w')
-        return html
+            time.sleep(1)
+            pyautogui.moveTo(dx * 1500, dy * 190, 1)
+            pyautogui.click(button='left')
+            time.sleep(1)
+            #pyautogui.hotkey('ctrl', 'w')
+            return html
