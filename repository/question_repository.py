@@ -114,9 +114,11 @@ class QuestionRepository:
         " and server_id='" + str(server_id) + "' "
         mysql_db_manager.excute_query(query)
 
-    def set_answer(self,mysql_db_manager,question,answer):
-        query = "UPDATE question SET answer_html = '" + escape_string(str(answer))+ "' WHERE url='" + escape_string(str(question.url)) + "' "\
-        " and server_id='" + str(server_id) + "' "
+    def set_answer(self,mysql_db_manager,question,answer,reason):
+        query = "UPDATE question SET answer_html = '" + escape_string(str(answer))+"' "\
+          ",answer_retrieved='" + str(1) + "' " \
+          ",state='" + str(reason) + "' " \
+          " WHERE question_chegg_id ='" + str(question.question_chegg_id) + "' "
         mysql_db_manager.excute_query(query)
 
     def set_page_html(self, mysql_db_manager, question, html):
@@ -149,7 +151,7 @@ class QuestionRepository:
             return True
 
 
-    def set_reason(self ,mysql_db_manager,question_chegg_id,reason):
-        query = "UPDATE question SET state = '"+str(reason)+"' WHERE question_chegg_id ='" + str(question_chegg_id) + "' " \
-                " and server_id='" + str(server_id) + "' "
+    def set_reason(self ,mysql_db_manager,question,reason):
+        query = "UPDATE question SET state = '"+str(reason)+"' WHERE question_chegg_id ='" + str(question.question_chegg_id)  + "' "
+
         mysql_db_manager.excute_query(query)

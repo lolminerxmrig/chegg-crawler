@@ -17,7 +17,7 @@ main_url = "google.com"
 storagePath = r'C:\Users\Administrator\AppData\Roaming\Mozilla\Firefox\Profiles\4nvq1yjz.default-release\storage.sqlite'
 cookiePath = r'C:\Users\Administrator\AppData\Roaming\Mozilla\Firefox\Profiles\4nvq1yjz.default-release\cookies.sqlite'
 sessionPath = r'C:\Users\Administrator\AppData\Roaming\Mozilla\Firefox\Profiles\4nvq1yjz.default-release\sessionstore.jsonlz4'
-
+HWifyURL="https://homeworkify.net/"
 # Question Processing
 QUESTION_IMAGES_FOLDER_NAME = "chegg_general_question_images"
 NUMBER_OF_QUESTIONS_TO_PROCESS =  200
