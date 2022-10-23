@@ -131,6 +131,7 @@ class HWifyCrawler:
                     time.sleep(.3)
                     driver.close()
                     time.sleep(3)#2 doesn't work, 3 works
+
                 else:
                     question_repository.set_reason(mysql_db_manager, question,'not from creativeworks')
 
