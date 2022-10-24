@@ -121,7 +121,7 @@ class HWifyCrawler:
                 time.sleep(2)
                 driver.execute_script("arguments[0].setAttribute('data-hcaptcha-response',arguments[1])", element,
                                       solution_code)
-                time.sleep(2)
+                time.sleep(2)#sleep
                 element = driver.find_element(By.ID, 'view-solution')
                 time.sleep(2)
                 element.click()
