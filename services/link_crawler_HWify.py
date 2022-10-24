@@ -143,7 +143,6 @@ class HWifyCrawler:
         except Exception as e:
             print("there is an Error")
             question_repository.set_reason(mysql_db_manager, question, 'Error')
-
     def _save_web_page(self, dx, dy):
         pyperclip.copy("")
 
