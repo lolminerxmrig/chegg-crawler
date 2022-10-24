@@ -41,24 +41,24 @@ class HWifyCrawler:
         flag = 0
         dx, dy = self.set_resolution()
         time.sleep(1)
-        driver = BrowserDriver().driver
-        driver.get(HWifyURL)
-        driver.maximize_window()
-        time.sleep(6)
+        # driver = BrowserDriver().driver
+        # driver.get(HWifyURL)
+        # driver.maximize_window()
+        # time.sleep(6)
         while True:
             # Comment: Here the first K not-crawled questions retrived which is better than hitting everytime on DB to get first not crawled
             questions = question_repository.get_first_not_answer_retrived_k_questions(mysql_db_manager, 1000)
             try:
                 for question in questions:
                     # self.pyautogui_search(dx, dy, question)
-                    self.selenium_search(question, driver)
+                    self.selenium_search(question)
 
 
 
             except Exception as e:
                 print(str(e))
                 # Slack().send_message_to_slack(GENERAL_ERROR, str(e))
-                sys.exit()
+                # sys.exit()
             if flag == 0:
                 print("Sorry But there is no question yet, wait the crawling process")
                 # Slack().send_message_to_slack(NO_QUESTION_YET, " ")
@@ -93,11 +93,11 @@ class HWifyCrawler:
             print("unknown")
             time.sleep(30)
 
-    def selenium_search(self, question, driver):
+    def selenium_search(self, question):
         # script = "window.open('https://homeworkify.net/','new window')"
         # driver.execute_script(script)
         driver = BrowserDriver().driver
-        driver.maximize_window()
+        #driver.maximize_window()
         driver.get(HWifyURL)
         time.sleep(5)
         element = driver.find_element(By.ID, 'hw-header-input')
@@ -116,34 +116,51 @@ class HWifyCrawler:
                 sitekey = src.split("sitekey=")[1].split("&")[0]
                 solution_code = solver(sitekey, HWifyURL)
                 print("solution = " + solution_code)
-                element = driver.find_element(By.TAG_NAME, 'iframe')
                 time.sleep(1)
+                element = driver.find_element(By.TAG_NAME, 'iframe')
+                time.sleep(2)
                 driver.execute_script("arguments[0].setAttribute('data-hcaptcha-response',arguments[1])", element,
                                       solution_code)
-                time.sleep(1)
+                time.sleep(2)
                 element = driver.find_element(By.ID, 'view-solution')
+                time.sleep(2)
                 element.click()
                 time.sleep(6)
                 get_url = driver.current_url
                 if get_url.find("creativeworks"):
                     answer = driver.find_element(By.XPATH, '/html/body/div/div/div[1]').get_attribute('innerHTML')
                     print(answer)
-                    question_repository.set_answer(mysql_db_manager, question, answer, 'no failure')
+                    try:
+                        question_repository.set_answer(mysql_db_manager, question, answer, 'no failure')
+                    except Exception as e:
+                        print(str(e))
+
                     time.sleep(.3)
                     driver.close()
                     time.sleep(3)  # 2 doesn't work, 3 works
 
                 else:
-                    question_repository.set_reason(mysql_db_manager, question, 'not from creativeworks')
+                    try:
+                        question_repository.set_reason(mysql_db_manager, question, 'not from creativeworks')
+                    except Exception as e:
+                        print(str(e))
+
 
             elif status == 'No solution found!':
                 # there is no solution
-                question_repository.set_reason(mysql_db_manager, question, 'no expert answer')
+                try:
+                    question_repository.set_reason(mysql_db_manager, question, 'no expert answer')
+                except Exception as e:
+                    print(str(e))
                 print("there is No solution")
 
         except Exception as e:
             print("there is an Error")
-            question_repository.set_reason(mysql_db_manager, question, 'Error')
+            try:
+                question_repository.set_reason(mysql_db_manager, question, 'Error')
+            except Exception as e:
+                print(str(e))
+
 
     def _save_web_page(self, dx, dy):
         pyperclip.copy("")
