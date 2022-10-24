@@ -50,8 +50,8 @@ class HWifyCrawler:
             questions = question_repository.get_first_not_answer_retrived_k_questions(mysql_db_manager, 1000)
             try:
                 for question in questions:
-                    #self.pyautogui_search(dx, dy, question)
-                    self.selenium_search(question,driver)
+                    # self.pyautogui_search(dx, dy, question)
+                    self.selenium_search(question, driver)
 
 
 
@@ -93,9 +93,9 @@ class HWifyCrawler:
             print("unknown")
             time.sleep(30)
 
-    def selenium_search(self, question,driver):
-        #script = "window.open('https://homeworkify.net/','new window')"
-        #driver.execute_script(script)
+    def selenium_search(self, question, driver):
+        # script = "window.open('https://homeworkify.net/','new window')"
+        # driver.execute_script(script)
         driver = BrowserDriver().driver
         driver.maximize_window()
         driver.get(HWifyURL)
@@ -115,10 +115,11 @@ class HWifyCrawler:
                 src = driver.find_element(By.TAG_NAME, 'iframe').get_attribute("src")
                 sitekey = src.split("sitekey=")[1].split("&")[0]
                 solution_code = solver(sitekey, HWifyURL)
-                print("solution = " +solution_code)
+                print("solution = " + solution_code)
                 element = driver.find_element(By.TAG_NAME, 'iframe')
                 time.sleep(1)
-                driver.execute_script("arguments[0].setAttribute('data-hcaptcha-response',arguments[1])",element, solution_code)
+                driver.execute_script("arguments[0].setAttribute('data-hcaptcha-response',arguments[1])", element,
+                                      solution_code)
                 time.sleep(1)
                 element = driver.find_element(By.ID, 'view-solution')
                 element.click()
@@ -127,13 +128,13 @@ class HWifyCrawler:
                 if get_url.find("creativeworks"):
                     answer = driver.find_element(By.XPATH, '/html/body/div/div/div[1]').get_attribute('innerHTML')
                     print(answer)
-                    question_repository.set_answer(mysql_db_manager, question, answer,'no failure')
+                    question_repository.set_answer(mysql_db_manager, question, answer, 'no failure')
                     time.sleep(.3)
                     driver.close()
-                    time.sleep(3)#2 doesn't work, 3 works
+                    time.sleep(3)  # 2 doesn't work, 3 works
 
                 else:
-                    question_repository.set_reason(mysql_db_manager, question,'not from creativeworks')
+                    question_repository.set_reason(mysql_db_manager, question, 'not from creativeworks')
 
             elif status == 'No solution found!':
                 # there is no solution
@@ -143,6 +144,7 @@ class HWifyCrawler:
         except Exception as e:
             print("there is an Error")
             question_repository.set_reason(mysql_db_manager, question, 'Error')
+
     def _save_web_page(self, dx, dy):
         pyperclip.copy("")
 
